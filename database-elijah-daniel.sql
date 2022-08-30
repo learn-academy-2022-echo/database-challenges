@@ -109,7 +109,7 @@ SELECT *
 FROM top_gnp
 ORDER BY population ASC
 LIMIT 1
--- Of the 10 least populated countries with permament residents (a non-zero population), which has the largest surfacearea? (HINT: Svalbard and Jan Mayen)
+-- Of the 10 least populated countries with permament residents (a non-zero population), which has the largest surfacearea? (HINT: Svalbard and Jan Mayen)✅
 WITH least_pop AS (
 	SELECT *
 	FROM Country
@@ -122,11 +122,32 @@ FROM least_pop
 ORDER BY surfacearea DESC
 LIMIT 1
 -- Aggregate Functions: GROUP BY
--- Which region has the highest average gnp? (HINT: North America)
--- Who is the most influential head of state measured by surface area? (HINT: Elisabeth II)
--- What is the average life expectancy for all continents?
--- What are the most common forms of government? (HINT: use count(*))
+-- Which region has the highest average gnp? (HINT: North America)✅
+Select AVG(gnp), region
+FROM  Country
+GROUP BY region
+ORDER BY AVG DESC
+LIMIT 1
+-- Who is the most influential head of state measured by surface area? (HINT: Elisabeth II)✅
+Select headofstate, SUM(surfacearea)
+FROM  Country
+GROUP BY headofstate
+ORDER BY SUM DESC
+LIMIT 1
+-- What is the average life expectancy for all continents?✅
+Select continent, AVG(lifeexpectancy)
+FROM  Country
+GROUP BY continent
+-- What are the most common forms of government? (HINT: use count(*))✅
+
+Select governmentform, COUNT(*)
+FROM  Country
+GROUP BY governmentform
+ORDER BY COUNT DESC
+Republic
+
 -- How many countries are in North America?
+✅
 -- What is the total population of all continents?
 -- Stretch Challenges
 -- Which countries have the letter ‘z’ in the name? How many?
