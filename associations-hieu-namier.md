@@ -12,16 +12,20 @@
     rails g model Owner 
 
 <!-- An owner has a name and address, and can have multiple credit cards -->
+    in terminal
     rails g model Owner name:string address:string
     rails db:migrate
 
 
 <!-- Create a model for credit card -->
-    rails g model Card
+    rails g model Credit
 
 <!-- A credit card has a number, an expiration date, and an owner -->
-    rails g model Card card_num:integer exp_date:integer owner:string
+    in terminal
+    rails g model Credit card_num:integer exp_date:integer owner_id:integer
     rails db:migrate
+
+
 
 <!-- Challenges -->
 <!-- Create three owners and save them in the database -->
@@ -34,18 +38,37 @@
     edited the app/models/card.rb and added belongs_to :owner
     edited the app/model/owner.rb and added has_many :cards
 
-    Card.create card_num: 123456789, exp_date: 20221031
-    Card.create card_num: 223456789, exp_date: 20221031
-    Card.create card_num: 323456789, exp_date: 20221031
+    Credit.create card_num: 123456789, exp_date: 20221031
+
 
 <!-- this doesn't work, no method error -->
+    in rails console
     joe = Owner.first
-    joe.cards.create card_num:147258369, exp_date: 20221031
+    joe.credits.create card_num:147258369, exp_date: 20221031
 
 
 <!-- Add two more credit cards to one of the owners -->
 
 
-Stretch Challenge
-Add a credit limit to each card
+<!-- Stretch Challenge -->
+<!-- Add a credit limit to each card -->
+
+    in terminal, rails g migration add_column_limit_to_credit
+
+    in the db/migration/AddColumnLimitToCredit.rb file there will be a method
+    within the method added the following code
+        add_column :credits, :limit, :integer
+    so add_column has 3 arguments, the table to be changed, the column to be added, and data type
+
+    in terminal, rails db:migrate
+    this now adds the new column to the schema.rb file
+
+
+<!-- DELETE a Model -->
+
+    in terminal, rails destroy model Credit
+    in terminal, rails db:drop
+    ...we forgot the rest
+
+
 Find the total credit extended to the owner with multiple credit cards
