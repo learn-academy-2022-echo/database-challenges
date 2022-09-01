@@ -39,6 +39,7 @@
     Card.create card_num: 323456789, exp_date: 20221031
 
 <!-- this doesn't work, no method error -->
+    joe = Owner.first
     joe.cards.create card_num:147258369, exp_date: 20221031
 
 
