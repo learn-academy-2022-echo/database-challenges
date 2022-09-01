@@ -1,5 +1,5 @@
-rails new banking -d postgresql -T
-cd banking
+rails new banking_app -d postgresql -T
+cd banking_app
 rails db:create
 rails s
 
@@ -22,4 +22,9 @@ rails db:migrate
  
 rails c
 
-credit_card.create number: 12345678, expiration_date: 06/22, owner: 
+luis = Owner.first
+luis.credit_cards.create number: 12345678, expiration_date: 230615
+tuan = Owner.second
+tuan.credit_cards.create number: 21204906, expiration_date: 230410
+tony = Owner.third
+toni.credit_cards.create number: 23141224, expiration_date: 301221
