@@ -32,8 +32,12 @@ Developer Stories
 
 As a developer, I need username, password, and email to be required.
 
+Run to test in terminal: spec/models/account_spec.rb
+
 spec/models/account_spec.rb
 
+
+```ruby
         RSpec.describe Account, type: :model do
         it 'is not is valid without username' do
             user = Account.create username:nil, password:'qwert123', email:'coffee@gmail.com'
@@ -57,17 +61,22 @@ spec/models/account_spec.rb
             expect(user.errors[:email]).to_not be_empty
         end
         end
+```
 
 app/models/account.rb 
+
+```ruby
 
         class Account < ApplicationRecord
             validates :username, :password, :email, presence: true
         end
+```
 
 
 As a developer, I need every username to be at least 5 characters long.
 
 spec/models/account_spec.rb
+```ruby
         it 'requires a minimum of 5 characters for username' do
         user = Account.create username:'ili', password:'qwert123', email:'coffee@gmail.com'
 
@@ -76,17 +85,21 @@ spec/models/account_spec.rb
         expect(user.errors[:username]).to_not be_empty
 
       end
+```
 
 app/models/account.rb 
+```ruby
         class Account < ApplicationRecord
             validates :username, :password, :email, presence: true
             validates :username, length: { minimum: 5}
         end
-
+```
 
 As a developer, I need each username to be unique.
 
 spec/models/account_spec.rb
+
+```ruby
     it 'does not allow duplicate usernames' do
     Account.create(username:'ilikecookies', password:'qwert123', email:'coffee@gmail.com')
     user = Account.create(username:'ilikecookies', password:'qwert123', email:'coffee@gmail.com')
@@ -94,22 +107,136 @@ spec/models/account_spec.rb
     expect(user.errors[:username]).to_not be_empty
 
 end
+```
 
 app/models/account.rb 
+
+```ruby
     class Account < ApplicationRecord
     validates :username, :password, :email, presence: true
     validates :username, length: { minimum: 5}
     validates :username, uniqueness: true
 end
-
-
-
+```
 
 As a developer, I need each password to be at least 6 characters long.
+
+spec/models/account_spec.rb
+
+```ruby
+        it 'requires a minimum of 6 characters for password' do
+        user = Account.create username:'ilikecookies', password:'qwer', email:'coffee@gmail.com'
+
+        p user.errors[:password]
+
+        expect(user.errors[:password]).to_not be_empty
+        end
+```
+
+app/models/account.rb 
+
+```ruby
+    class Account < ApplicationRecord
+        validates :username, :password, :email, presence: true
+        validates :username, length: { minimum: 5 }
+        validates :password, length: { minimum: 6 }
+        validates :username, uniqueness: true
+    end 
+```
+
 As a developer, I need each password to be unique.
+
+spec/models/account_spec.rb
+
+```ruby
+    it 'does not allow duplicate passwords' do
+    Account.create(username:'ilikecookies', password:'qwert123', email:'coffee@gmail.com')
+    user = Account.create(username:'ilikecookies', password:'qwert123', email:'coffee@gmail.com')
+
+    expect(user.errors[:password]).to_not be_empty
+    end
+```
+
+
+app/models/account.rb
+```ruby
+    class Account < ApplicationRecord
+        validates :username, :password, :email, presence: true
+        validates :username, length: { minimum: 5 }
+        validates :password, length: { minimum: 6 }
+        validates :username, :password, uniqueness: true
+    end
+```
+
 As a developer, I want my Account model to have many associated Addresses.
 As a developer, I want Address to have street_number, street_name, city, state, and zip attributes. The street_number and zip should be integers.
+
+$ rails generate model Address street_number:integer street_name:string city:string state:string zip:integer
+
+     create    db/migrate/20220902194730_create_addresses.rb
+      create    app/models/address.rb
+      invoke    rspec
+      create      spec/models/address_spec.rb
+
+$ rails db:migrate
+
+    == 20220902194730 CreateAddresses: migrating ==================================
+    -- create_table(:addresses)
+    -> 0.0433s
+    == 20220902194730 CreateAddresses: migrated (0.0434s) =========================
+
+
 As a developer, I want to validate the presence of all fields on Address.
+
+Run to test in terminal: rspec spec/models/address_spec
+.rb
+
+spec/models/address_spec.rb
+``` ruby
+        require 'rails_helper'
+
+        RSpec.describe Address, type: :model do
+        it 'is not valid without a street name' do
+            address1 = Address.create street_name:nil, city:'San Diego', state:'CA', zip:91902
+
+            p address1.errors[:street_name]
+
+            expect(address1.errors[:street_name]).to_not be_empty
+        end
+        it 'is not valid without a city' do
+            address1 = Address.create street_name:'123 Twice Way', city:nil, state:'CA', zip:91902
+
+            p address1.errors[:city]
+
+            expect(address1.errors[:city]).to_not be_empty
+        end
+        it 'is not valid without a state' do
+            address1 = Address.create street_name:'123 Twice Way', city:'San Diego', state:nil, zip:91902
+
+            p address1.errors[:state]
+
+            expect(address1.errors[:state]).to_not be_empty
+        end
+
+        it 'is not valid without a zip' do
+            address1 = Address.create street_name:'123 Twice Way', city:'San Diego', state:'CA', zip:nil
+
+            p address1.errors[:zip]
+
+            expect(address1.errors[:zip]).to_not be_empty
+        end
+        end
+```
+
+
+app/models/address.rb
+``` ruby
+        class Address < ApplicationRecord
+            validates :street_name, :city, :state, :zip, presence: true
+        end
+```
+
+
 Stretch Challenges
 
 As a developer, I need each Account password to have at least one number.
